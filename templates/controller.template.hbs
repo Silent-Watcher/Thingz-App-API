@@ -1,0 +1,6 @@
+import { type NextFunction, type Request, type Response } from 'express'; import
+Controller from '../../interfaces/controller.interface'; class
+{{titleCase name}}Contoller extends Controller { constructor() { super(); }
+index(_req: Request, res: Response, _next: NextFunction){ res.send('{{name}}index
+here'); } } export default new
+{{titleCase name}}Contoller();

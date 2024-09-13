@@ -1,0 +1,39 @@
+{
+	"$schema": "http://json.schemastore.org/tsconfig",
+	"compilerOptions": {
+		"rootDir": "./src",
+		"outDir": "./dist",
+
+		"lib": ["ESNext"],
+
+		"target": "ESNext",
+		"module": "ESNext",
+		"resolveJsonModule": true,
+		"moduleResolution": "Bundler",
+		"moduleDetection": "force",
+		"esModuleInterop": true,
+
+		"baseUrl": ".",
+
+		"strict": true,
+		"noImplicitAny": true,
+		"skipLibCheck": true,
+		"noFallthroughCasesInSwitch": true,
+
+		"forceConsistentCasingInFileNames": true,
+		"removeComments": true,
+		"sourceMap": true,
+
+		"noUnusedLocals": true,
+		"noUnusedParameters": true,
+		"noPropertyAccessFromIndexSignature": true,
+
+		"paths": {
+			"$app/*": ["./src/*"]
+		},
+
+		"typeRoots": ["./src/common/@types/**", "./node_modules/@types/*"]
+	},
+	"include": ["./src/**/*"],
+	"exclude": ["./node_modules/"]
+}

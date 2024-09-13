@@ -1,0 +1,43 @@
+services:
+    mongo:
+        container_name: mongo
+        image: mongo
+        restart: always
+        volumes:
+            - mongodb_data:/data/db
+        networks:
+            - main
+        ports:
+            - 27017:27017
+        command: mongod --quiet --logpath /dev/null
+        environment:
+            MONGO_INITDB_ROOT_USERNAME: root
+            MONGO_INITDB_ROOT_PASSWORD: 123
+
+    backend:
+        container_name: app
+        build:
+            context: .
+            dockerfile: Dockerfile
+            target: Build
+        ports:
+            - 5000:5000
+            - 9229:9229 # for debuging!
+        volumes:
+            - .:/build
+            - /build/node_modules
+        depends_on:
+            - mongo
+        networks:
+            - main
+        restart: always
+        command: bun run serve
+        environment:
+            PORT: 5000
+            NODE_ENV: development
+            DATABASE_URL: mongodb://127.0.0.1:27017
+
+networks:
+    main:
+volumes:
+    mongodb_data:

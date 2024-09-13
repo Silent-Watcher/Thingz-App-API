@@ -1,0 +1,450 @@
+{
+	"info": {
+		"title": "api",
+		"version": "1.0.0",
+		"contact": {
+			"email": "backendwithali@gmail.com",
+			"name": "Ali nazari"
+		}
+	},
+	"openapi": "3.0.0",
+	"components": {
+		"schemas": {
+			"successResponse": {
+				"type": "object",
+				"properties": {
+					"status": {
+						"type": "number"
+					},
+					"code": {
+						"type": "string"
+					},
+					"message": {
+						"type": "string"
+					}
+				},
+				"example": {
+					"status": "OK",
+					"code": 200,
+					"message": "successfull!"
+				}
+			},
+			"errorResponse": {
+				"type": "object",
+				"properties": {
+					"status": {
+						"type": "number"
+					},
+					"error": {
+						"type": "object",
+						"properties": {
+							"code": {
+								"type": "string",
+								"example": "Internal Server Error"
+							},
+							"message": {
+								"type": "string",
+								"example": "error"
+							}
+						}
+					}
+				}
+			},
+			"sendOtp": {
+				"type": "object",
+				"required": [
+					"mobile"
+				],
+				"properties": {
+					"mobile": {
+						"type": "string"
+					}
+				},
+				"example": {
+					"mobile": "09037567362"
+				}
+			},
+			"checkOtp": {
+				"type": "object",
+				"required": [
+					"mobile",
+					"code"
+				],
+				"properties": {
+					"mobile": {
+						"type": "string"
+					},
+					"code": {
+						"type": "string"
+					}
+				},
+				"example": {
+					"mobile": "09037567362",
+					"code": 15243
+				}
+			},
+			"category": {
+				"type": "object",
+				"required": [
+					"name"
+				],
+				"properties": {
+					"_id": {
+						"example": "",
+						"type": "string"
+					},
+					"name": {
+						"example": "dummy",
+						"type": "string"
+					},
+					"icon": {
+						"example": "",
+						"type": "string"
+					},
+					"slug": {
+						"example": "",
+						"type": "string"
+					},
+					"parent": {
+						"example": "",
+						"type": "string"
+					}
+				}
+			}
+		}
+	},
+	"paths": {
+		"/auth/send-otp": {
+			"post": {
+				"summary": "send an otp code for authenticate users",
+				"tags": [
+					"Authentication"
+				],
+				"description": "register a new user or login an existing user via mobile number",
+				"requestBody": {
+					"description": "user mobile should be provided ! (only ir format accepted)",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/sendOtp"
+							}
+						},
+						"application/x-www-form-urlencoded": {
+							"schema": {
+								"$ref": "#/components/schemas/sendOtp"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "otp sent successfully",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/successResponse"
+								}
+							}
+						}
+					},
+					"406": {
+						"description": "required data not provided",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/errorResponse"
+								},
+								"example": {
+									"status": "406",
+									"error": {
+										"code": "not acceptable",
+										"message": "required data not provided"
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "otp not expired ! try again later",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/errorResponse"
+								},
+								"example": {
+									"status": "400",
+									"error": {
+										"code": "bad request",
+										"message": "required data not provided"
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/auth/check-otp": {
+			"post": {
+				"summary": "checks user input otp",
+				"tags": [
+					"Authentication"
+				],
+				"description": "validate user's given otp",
+				"requestBody": {
+					"description": "user mobile should be provided ! (only ir format accepted) with given otp",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/checkOtp"
+							}
+						},
+						"application/x-www-form-urlencoded": {
+							"schema": {
+								"$ref": "#/components/schemas/checkOtp"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "otp verified successfully",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/successResponse"
+								},
+								"example": {
+									"status": 200,
+									"code": "OK",
+									"message": "otp verified successfully"
+								}
+							}
+						}
+					},
+					"406": {
+						"description": "otp verified successfully",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/successResponse"
+								},
+								"example": {
+									"status": "406",
+									"error": {
+										"code": "not acceptable",
+										"message": "required data not provided | otp code expired! get a new one"
+									}
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "user not found with given mobile number",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/errorResponse"
+								},
+								"example": {
+									"status": "404",
+									"error": {
+										"code": "not found",
+										"message": "user not found"
+									}
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "otp value is invalid",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/errorResponse"
+								},
+								"example": {
+									"status": "401",
+									"error": {
+										"code": "Unauthorized",
+										"message": "otp value is invalid"
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/auth/logout": {
+			"get": {
+				"summary": "logout the existing user",
+				"tags": [
+					"Authentication"
+				],
+				"responses": {
+					"200": {
+						"description": "clear the access_token cookie and logout the user",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/successResponse"
+								},
+								"example": {
+									"status": "OK",
+									"code": 200,
+									"message": "logout successfully!"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/user/whoami": {
+			"get": {
+				"summary": "get verified user's info",
+				"tags": [
+					"User"
+				],
+				"responses": {
+					"200": {
+						"description": "fetch the verified user",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"status": {
+											"type": "number",
+											"example": 200
+										},
+										"message": {
+											"type": "string",
+											"example": "hello!"
+										},
+										"user": {
+											"type": "object",
+											"properties": {
+												"_id": {
+													"type": "string",
+													"example": "66e2bfe908150d53634f8318"
+												},
+												"mobile": {
+													"type": "string",
+													"example": "09037567362"
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/category": {
+			"get": {
+				"summary": "fetch the list of all categories",
+				"tags": [
+					"Category"
+				],
+				"responses": {
+					"200": {
+						"description": "returns the list of all defined categories",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"status": {
+											"type": "number"
+										},
+										"code": {
+											"type": "string"
+										},
+										"categories": {
+											"type": "array",
+											"items": {
+												"type": "object",
+												"properties": {
+													"_id": {
+														"type": "string"
+													},
+													"name": {
+														"type": "string"
+													},
+													"icon": {
+														"type": "string"
+													},
+													"slug": {
+														"type": "string"
+													},
+													"parent": {
+														"type": "string"
+													},
+													"children": {
+														"type": "array",
+														"items": {
+															"$ref": "#/components/schemas/category"
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			},
+			"post": {
+				"summary": "create a new category",
+				"tags": [
+					"Category"
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/category"
+							}
+						},
+						"application/x-www-form-urlencoded": {
+							"schema": {
+								"$ref": "#/components/schemas/category"
+							}
+						}
+					}
+				},
+				"responses": {
+					"201": {
+						"description": "a new category created successfully",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/successResponse"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "failed to create the new category",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/errorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
