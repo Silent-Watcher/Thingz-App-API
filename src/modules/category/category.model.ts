@@ -1,43 +1,50 @@
-import { type Document, Schema, Types, model } from 'mongoose';
+import { type CallbackWithoutResultAndOptionalError, type Document, Schema, Types, model } from 'mongoose';
 import { z } from 'zod';
 
 export const zCategory = z.object({
-	_id: z.instanceof(Types.ObjectId),
-	name: z.string().trim(),
-	icon: z.string().optional(),
-	slug: z.string().trim().optional(),
-	parent: z.instanceof(Types.ObjectId).optional(),
-	parents: z.array(z.instanceof(Types.ObjectId).optional()),
-	updatedAt: z.number().optional(),
-	createdAt: z.number().optional(),
+  _id: z.union([z.instanceof(Types.ObjectId), z.string()]),
+  name: z.string().trim(),
+  icon: z.string().optional(),
+  slug: z.string().trim().optional(),
+  parent: z.union([z.instanceof(Types.ObjectId).optional(), z.string()]),
+  parents: z.array(z.union([z.instanceof(Types.ObjectId).optional(), z.string()])),
+  updatedAt: z.number().optional(),
+  createdAt: z.number().optional(),
 });
 
 const categorySchema = new Schema(
-	{
-		name: { type: String, required: true, unique: true, trim: true },
-		icon: { type: String, required: false },
-		slug: { type: String, required: false },
-		parent: { type: Types.ObjectId, required: false, ref: 'category' },
-		parents: {
-			type: [Types.ObjectId],
-			required: false,
-			default: [],
-			ref: 'category',
-		},
-	},
-	{
-		timestamps: true,
-		toJSON: { virtuals: true },
-		id: false,
-		versionKey: false,
-	},
+  {
+    name: { type: String, required: true, unique: true, trim: true },
+    icon: { type: String, required: false },
+    slug: { type: String, required: false },
+    parent: { type: Types.ObjectId, required: false, ref: 'categories' },
+    parents: {
+      type: [Types.ObjectId],
+      required: false,
+      default: [],
+      ref: 'categories',
+    },
+  },
+  {
+    timestamps: true,
+    toJSON: { virtuals: true },
+    id: false,
+    versionKey: false,
+  },
 );
 
 categorySchema.virtual('children', {
-	ref: 'category',
-	localField: '_id',
-	foreignField: 'parent',
+  ref: 'category',
+  localField: '_id',
+  foreignField: 'parent',
 });
+
+// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+function autoPopulate(this: any, next: CallbackWithoutResultAndOptionalError){
+	this.populate([{path:'children'}]).exec();
+	next();
+}
+categorySchema.pre('find',autoPopulate).pre('findOne' , autoPopulate)
 
 const categoryModel = model('category', categorySchema);
 

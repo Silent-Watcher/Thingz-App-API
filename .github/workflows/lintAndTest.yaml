@@ -1,0 +1,17 @@
+name: Lint and Test Workflow
+on:
+    pull_request:
+        branches:
+            - main
+            - master
+jobs:
+    lint-and-test:
+        name: Lint and Test
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - name: Use Bun js
+              uses: oven-sh/setup-bun@v2
+            - run: bun install --frozen-lockfile
+            - run: bun lint
+            - run: npm run test

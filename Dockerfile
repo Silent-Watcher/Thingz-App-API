@@ -20,4 +20,4 @@ RUN  bun install --production
 
 COPY --from=Build ./build/dist ./app/dist
 
-CMD [ "bun" , "run" ,"start" ]
+CMD [ "bun","start" ]

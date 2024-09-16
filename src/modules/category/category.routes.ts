@@ -1,6 +1,6 @@
+import removeEmpty from '$app/common/middlewares/removeEmpty.middleware';
 import { Router } from 'express';
 import categoryController from './category.controller';
-import removeEmpty from '$app/common/middlewares/removeEmpty.middleware';
 
 const router = Router();
 

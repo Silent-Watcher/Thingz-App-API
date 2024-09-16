@@ -1,3 +1,5 @@
 {
-	"*.ts": "npm run lint"
+  "*.{js,ts,cjs,mjs,d.cts,d.mts,jsx,tsx,json,jsonc}": [
+    "bunx biome check --changed --write --no-errors-on-unmatched"
+  ]
 }

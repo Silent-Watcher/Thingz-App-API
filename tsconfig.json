@@ -1,39 +1,39 @@
 {
-	"$schema": "http://json.schemastore.org/tsconfig",
-	"compilerOptions": {
-		"rootDir": "./src",
-		"outDir": "./dist",
+  "$schema": "http://json.schemastore.org/tsconfig",
+  "compilerOptions": {
+    "rootDir": "./src",
+    "outDir": "./dist",
 
-		"lib": ["ESNext"],
+    "lib": ["ESNext"],
 
-		"target": "ESNext",
-		"module": "ESNext",
-		"resolveJsonModule": true,
-		"moduleResolution": "Bundler",
-		"moduleDetection": "force",
-		"esModuleInterop": true,
+    "target": "ESNext",
+    "module": "ESNext",
+    "resolveJsonModule": true,
+    "moduleResolution": "Bundler",
+    "moduleDetection": "force",
+    "esModuleInterop": true,
 
-		"baseUrl": ".",
+    "baseUrl": ".",
 
-		"strict": true,
-		"noImplicitAny": true,
-		"skipLibCheck": true,
-		"noFallthroughCasesInSwitch": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "skipLibCheck": true,
+    "noFallthroughCasesInSwitch": true,
 
-		"forceConsistentCasingInFileNames": true,
-		"removeComments": true,
-		"sourceMap": true,
+    "forceConsistentCasingInFileNames": true,
+    "removeComments": true,
+    "sourceMap": true,
 
-		"noUnusedLocals": true,
-		"noUnusedParameters": true,
-		"noPropertyAccessFromIndexSignature": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noPropertyAccessFromIndexSignature": true,
 
-		"paths": {
-			"$app/*": ["./src/*"]
-		},
+    "paths": {
+      "$app/*": ["./src/*"]
+    },
 
-		"typeRoots": ["./src/common/@types/**", "./node_modules/@types/*"]
-	},
-	"include": ["./src/**/*"],
-	"exclude": ["./node_modules/"]
+    "typeRoots": ["./src/common/@types/**", "./node_modules/@types/*"]
+  },
+  "include": ["./src/**/*"],
+  "exclude": ["./node_modules/"]
 }

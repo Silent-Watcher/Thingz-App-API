@@ -1,11 +1,11 @@
 import '$app/configs/env.config';
 
-import logger, { startLogger } from './configs/logger.config';
-import { configSwagger } from '$app/configs/swagger.config';
-import connectToMongoDb from '$app/configs/db.config';
-import cookieParser from 'cookie-parser';
 import { errorHandler } from '$app/common/exceptions';
+import connectToMongoDb from '$app/configs/db.config';
+import { configSwagger } from '$app/configs/swagger.config';
+import cookieParser from 'cookie-parser';
 import express from 'express';
+import logger, { startLogger } from './configs/logger.config';
 
 import router from './common/router';
 
@@ -26,12 +26,12 @@ app.use(router);
 errorHandler(app);
 
 connectToMongoDb(DB_NAME as string)
-	.then(() => {
-		logger.info('connected to mongoDB successfully');
-		app.listen(PORT, '0.0.0.0', () => {
-			logger.info(`Server listening at http://localhost:${PORT}`);
-		});
-	})
-	.catch(() => {
-		logger.error('failed to connect to mongodb');
-	});
+  .then(() => {
+    logger.info('connected to mongoDB successfully');
+    app.listen(PORT, '0.0.0.0', () => {
+      logger.info(`Server listening at ${process.env.SERVER_ADDR}`);
+    });
+  })
+  .catch(() => {
+    logger.error('failed to connect to mongodb');
+  });

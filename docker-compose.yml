@@ -31,7 +31,7 @@ services:
         networks:
             - main
         restart: always
-        command: bun run serve
+        command: bun serve
         environment:
             PORT: 5000
             NODE_ENV: development

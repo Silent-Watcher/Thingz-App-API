@@ -1,63 +1,61 @@
 {
-	"private": true,
-	"engines": {
-		"node": ">=20.16.0"
-	},
-	"engineStrict": true,
-	"packageManager": "npm@10.8.1",
-	"scripts": {
-		"serve": "bun --env-file=.env.local --watch src/main.ts --minify",
-		"build": "bun build src/main.ts --outdir ./dist --minify --splitting --external mongoose --target node ",
-		"prestart": "bun run build",
-		"start": "bun ./dist/main.js",
-		"prettier": "prettier --write .",
-		"lint:fix": "bun x eslint . --fix",
-		"prelint": "bun prettier && bun lint:fix",
-		"lint": "bun x eslint .",
-		"husky": "bun .husky/install.mjs",
-		"generate": "plop"
-	},
-	"dependencies": {
-		"@types/swagger-ui-express": "^4.1.6",
-		"auto-bind": "^5.0.1",
-		"cookie-parser": "^1.4.6",
-		"express": "^4.21.0",
-		"http-errors": "^2.0.0",
-		"http-status": "^1.7.4",
-		"jsonwebtoken": "^9.0.2",
-		"mongoose": "^8.6.2",
-		"morgan": "^1.10.0",
-		"omit-empty": "^1.0.0",
-		"slugify": "^1.6.6",
-		"swagger-themes": "^1.4.3",
-		"swagger-ui-express": "^5.0.1",
-		"winston": "^3.14.2",
-		"zod": "^3.23.8",
-		"zod-validation-error": "^3.3.1"
-	},
-	"devDependencies": {
-		"@commitlint/cli": "^19.5.0",
-		"@commitlint/config-conventional": "^19.5.0",
-		"@eslint/js": "^9.10.0",
-		"@types/bun": "^1.1.9",
-		"@types/cookie-parser": "^1.4.7",
-		"@types/express": "^4.17.21",
-		"@types/http-status": "^1.1.2",
-		"@types/jsonwebtoken": "^9.0.6",
-		"@types/morgan": "^1.9.9",
-		"@types/omit-empty": "^1.0.3",
-		"cz-conventional-changelog": "^3.3.0",
-		"eslint": "^9.10.0",
-		"husky": "^9.1.6",
-		"lint-staged": "^15.2.10",
-		"plop": "^4.0.1",
-		"prettier": "^3.3.3",
-		"typescript": "^5.6.2",
-		"typescript-eslint": "^8.5.0"
-	},
-	"config": {
-		"commitizen": {
-			"path": "./node_modules/cz-conventional-changelog"
-		}
-	}
+  "private": true,
+  "engines": {
+    "node": ">=20.16.0"
+  },
+  "engineStrict": true,
+  "packageManager": "npm@10.8.1",
+  "scripts": {
+    "preserve": "bunx biome check  --write .",
+    "serve": "bun --env-file=.env.local --watch src/main.ts --minify",
+    "build": "bun build src/main.ts --outdir ./dist --minify --splitting --external mongoose --target node ",
+    "prestart": "bun run build",
+    "start": "bun ./dist/main.js",
+    "format": "bunx biome format --write .",
+    "lint": "bunx biome lint --write .",
+    "check": "bunx biome check --write .",
+    "husky": "bun .husky/install.mjs",
+    "prepare": "husky",
+    "generate": "plop"
+  },
+  "dependencies": {
+    "@types/swagger-ui-express": "^4.1.6",
+    "auto-bind": "^5.0.1",
+    "cookie-parser": "^1.4.6",
+    "express": "^4.21.0",
+    "http-errors": "^2.0.0",
+    "http-status": "^1.7.4",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.6.2",
+    "morgan": "^1.10.0",
+    "omit-empty": "^1.0.0",
+    "slugify": "^1.6.6",
+    "swagger-themes": "^1.4.3",
+    "swagger-ui-express": "^5.0.1",
+    "winston": "^3.14.2",
+    "zod": "^3.23.8",
+    "zod-validation-error": "^3.3.1"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "1.9.1",
+    "@commitlint/cli": "^19.5.0",
+    "@commitlint/config-conventional": "^19.5.0",
+    "@types/bun": "^1.1.9",
+    "@types/cookie-parser": "^1.4.7",
+    "@types/express": "^4.17.21",
+    "@types/http-status": "^1.1.2",
+    "@types/jsonwebtoken": "^9.0.6",
+    "@types/morgan": "^1.9.9",
+    "@types/omit-empty": "^1.0.3",
+    "cz-conventional-changelog": "^3.3.0",
+    "husky": "^9.1.6",
+    "lint-staged": "^15.2.10",
+    "plop": "^4.0.1",
+    "typescript": "^5.6.2"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  }
 }
