@@ -13,17 +13,11 @@ class CategoryService extends Service {
   async create(categoryDto: Category) {
     // set the parent and parents value for category if the parent id is provided
     if (categoryDto?.parent && isValidObjectId(categoryDto.parent)) {
-      const foundedParentCategory = await this.checkIfTheParentExists(
-        categoryDto.parent,
-      );
+      const foundedParentCategory = await this.checkIfTheParentExists(categoryDto.parent);
       const parents = [
         ...new Set(
           [foundedParentCategory._id.toString()]
-            .concat(
-              foundedParentCategory.parents.map((id) =>
-                (id as Types.ObjectId).toString(),
-              ),
-            )
+            .concat(foundedParentCategory.parents.map((id) => (id as Types.ObjectId).toString()))
             .map((id) => new Types.ObjectId(id)),
         ),
       ];
@@ -32,7 +26,7 @@ class CategoryService extends Service {
     }
 
     // slugify the given slug value
-    if (!categoryDto?.slug) categoryDto.slug = slugify(categoryDto.name);
+    if (!categoryDto?.slug) categoryDto.slug = slugify(categoryDto.name, { trim: true });
     else {
       await this.checkIfTheSlugIsAlreadyExists(categoryDto.slug);
       categoryDto.slug = slugify(categoryDto.slug);
@@ -43,15 +37,18 @@ class CategoryService extends Service {
 
   async checkIfTheParentExists(id: Types.ObjectId | string): Promise<Category> {
     const parentCategory: Category | null = await categoryModel.findById(id);
-    if (!parentCategory)
-      throw new httpErrors.NotFound(`parent category with id ${id} not found`);
+    if (!parentCategory) throw new httpErrors.NotFound(`parent category with id ${id} not found`);
     return parentCategory;
   }
 
   async checkIfTheSlugIsAlreadyExists(slug: string) {
     const foundedCategory = await categoryModel.findOne({ slug });
-    if (foundedCategory)
-      throw new httpErrors.Conflict('the given slug is already defined!');
+    if (foundedCategory) throw new httpErrors.Conflict('the given slug is already defined!');
+  }
+
+  async checkIfTheCategoryExists(categoryId: string | Types.ObjectId) {
+    const foundedCategory = await this.model.findById(categoryId, { _id: 1 }).lean();
+    return foundedCategory ? true : false;
   }
 }
 

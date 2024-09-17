@@ -6,7 +6,7 @@ import categoryMessages from './category.messages';
 import categoryModel, { zCategory } from './category.model';
 import categoryService from './category.service';
 
-class CategoryContoller extends Controller {
+class CategoryController extends Controller {
   private service;
   constructor() {
     super();
@@ -15,8 +15,10 @@ class CategoryContoller extends Controller {
 
   async getAll(_req: Request, res: Response, next: NextFunction) {
     try {
-      const categories = await categoryModel.find({parent:{$exists:false}})
-	  																					.populate([{path:"children"}]).exec();
+      const categories = await categoryModel
+        .find({ parent: { $exists: false } })
+        .populate([{ path: 'children' }])
+        .exec();
       res.status(httpStatus.OK).send({
         status: res.statusCode,
         code: 'OK',
@@ -57,4 +59,4 @@ class CategoryContoller extends Controller {
   }
 }
 
-export default new CategoryContoller();
+export default new CategoryController();

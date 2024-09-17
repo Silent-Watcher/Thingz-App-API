@@ -103,6 +103,31 @@
             "type": "string"
           }
         }
+      },
+      "option": {
+        "type": "object",
+        "required": ["key", "title", "type", "category"],
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": ["string", "boolean", "number", "array"]
+          },
+          "category": {
+            "type": "string"
+          },
+          "enum": {
+            "type": "array"
+          },
+          "guide": {
+            "type": "string"
+          }
+        }
       }
     }
   },
@@ -425,6 +450,97 @@
             }
           }
         }
+      }
+    },
+    "/option": {
+      "post": {
+        "summary": "create set of options for a specific category",
+        "tags": ["Option"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/option"
+              }
+            },
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "$ref": "#/components/schemas/option"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/successResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/option/for/{categoryId}": {
+      "get": {
+        "summary": "returns the defined options for a specific category",
+        "tags": ["Option"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "categoryId",
+            "description": "Numeric ID of the category to get",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "number"
+                    },
+                    "code": {
+                      "type": "string"
+                    },
+                    "options": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/option"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/option/{optionId}": {
+      "get": {
+        "summary": "returns the defined options for a specific category",
+        "tags": ["Option"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "optionId",
+            "description": "Numeric ID of the option to get",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ]
       }
     }
   }

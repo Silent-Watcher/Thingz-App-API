@@ -17,10 +17,10 @@
     "indentStyle": "space",
     "indentWidth": 2,
     "lineEnding": "lf",
-    "lineWidth": 80,
+    "lineWidth": 100,
     "attributePosition": "auto",
     "bracketSpacing": true,
-    "ignore": ["**/node_modules", "**/dist"]
+    "ignore": ["**/node_modules", "**/dist", "./templates/"]
   },
   "organizeImports": {
     "enabled": true
@@ -101,7 +101,7 @@
         "useValidTypeof": "error"
       }
     },
-    "ignore": ["dist/**/*", "node_modules/**/*"]
+    "ignore": ["dist/**/*", "node_modules/**/*", "templates/"]
   },
   "javascript": {
     "formatter": {

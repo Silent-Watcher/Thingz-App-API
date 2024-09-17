@@ -1,1 +1,1 @@
-bunx biome check 
+bun run format && bun run lint

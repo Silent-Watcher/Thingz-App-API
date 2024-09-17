@@ -1,8 +1,7 @@
 import mongoose from 'mongoose';
 
 async function connectToMongoDb(dbName: string): Promise<void> {
-  const { MONGO_USERNAME, MONGO_PASSWORD, MONGO_HOST, MONGO_PORT } =
-    process.env;
+  const { MONGO_USERNAME, MONGO_PASSWORD, MONGO_HOST, MONGO_PORT } = process.env;
   const authOptions: {
     auth?: {
       username: string;

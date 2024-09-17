@@ -6,8 +6,7 @@ const authMessages = Object.freeze({
   otpExpired: 'otp code expired! get a new one',
   invalidOtpValue: 'otp value is invalid',
   otpVerified: 'otp verified successfully',
-  unauthorizedUser:
-    'user is unauthorized, please login or create a new account',
+  unauthorizedUser: 'user is unauthorized, please login or create a new account',
   invalidCredentials: 'invalid credentials',
 });
 

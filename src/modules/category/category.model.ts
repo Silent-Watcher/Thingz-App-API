@@ -1,4 +1,10 @@
-import { type CallbackWithoutResultAndOptionalError, type Document, Schema, Types, model } from 'mongoose';
+import {
+  type CallbackWithoutResultAndOptionalError,
+  type Document,
+  Schema,
+  Types,
+  model,
+} from 'mongoose';
 import { z } from 'zod';
 
 export const zCategory = z.object({
@@ -39,12 +45,18 @@ categorySchema.virtual('children', {
   foreignField: 'parent',
 });
 
+categorySchema.virtual('options', {
+  ref: 'options',
+  localField: '_id',
+  foreignField: 'category',
+});
+
 // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-function autoPopulate(this: any, next: CallbackWithoutResultAndOptionalError){
-	this.populate([{path:'children'}]).exec();
-	next();
+function autoPopulate(this: any, next: CallbackWithoutResultAndOptionalError) {
+  this.populate([{ path: 'children' }]).exec();
+  next();
 }
-categorySchema.pre('find',autoPopulate).pre('findOne' , autoPopulate)
+categorySchema.pre('find', autoPopulate).pre('findOne', autoPopulate);
 
 const categoryModel = model('category', categorySchema);
 

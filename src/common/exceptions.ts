@@ -3,12 +3,7 @@ import httpStatus from 'http-status';
 import { z } from 'zod';
 import { fromZodError } from 'zod-validation-error';
 
-export function handleExceptions(
-  err: unknown,
-  _req: Request,
-  res: Response,
-  next: NextFunction,
-) {
+export function handleExceptions(err: unknown, _req: Request, res: Response, next: NextFunction) {
   if (err) {
     // handle data validation error
     if (err instanceof z.ZodError) {
@@ -47,11 +42,7 @@ export function handleExceptions(
   } else next();
 }
 
-export function handleNotFoundErrors(
-  req: Request,
-  res: Response,
-  _next: NextFunction,
-) {
+export function handleNotFoundErrors(req: Request, res: Response, _next: NextFunction) {
   return res.status(httpStatus.NOT_FOUND).send({
     status: res.statusCode,
     error: {
