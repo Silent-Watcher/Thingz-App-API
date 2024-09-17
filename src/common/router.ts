@@ -11,7 +11,7 @@ router.get('/', (_req: Request, res: Response) => {
 });
 
 router.get('/health', async (_req: Request, res: Response) => {
-  res.send({ msg: 'server is up and running ... ' });
+  res.send({ status: res.statusCode, code: 'OK', msg: 'server is up and running ... ' });
 });
 
 router.use('/auth', authRouter);

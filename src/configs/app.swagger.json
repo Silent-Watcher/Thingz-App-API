@@ -132,6 +132,35 @@
     }
   },
   "paths": {
+    "/health": {
+      "get": {
+        "summary": "check if the server is up and running",
+        "tags": ["Server"],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": 200,
+                    "code": "OK",
+                    "msg": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "status": 200,
+                  "code": "OK",
+                  "msg": "server is up and running ... "
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/auth/send-otp": {
       "post": {
         "summary": "send an otp code for authenticate users",
