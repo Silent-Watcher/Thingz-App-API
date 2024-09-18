@@ -126,7 +126,10 @@
           },
           "guide": {
             "type": "string"
-          }
+          },
+		  "isRequired":{
+			"type":"boolean"
+		  }
         }
       }
     }
@@ -509,6 +512,96 @@
                 }
               }
             }
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "summary": "get the list of all options",
+        "tags": ["Option"],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "properties": {
+                    "$ref": "#/components/schemas/option"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/option/{optionId}": {
+      "get": {
+        "summary": "returns the option with given id",
+        "tags": ["Option"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "optionId",
+            "description": "Numeric ID of the option to get",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/option"
+                }
+              }
+            }
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "delete an existing option from given id value",
+        "tags": ["Option"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "optionId",
+            "description": "Numeric ID of the option to delete",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/successResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -524,7 +617,7 @@
             "description": "Numeric ID of the category to get",
             "required": true,
             "schema": {
-              "type": "integer"
+              "type": "string"
             }
           }
         ],
@@ -555,21 +648,46 @@
         }
       }
     },
-    "/option/{optionId}": {
+    "/option/for/slug/{categorySlug}": {
       "get": {
-        "summary": "returns the defined options for a specific category",
+        "summary": "get option from the category slug value",
         "tags": ["Option"],
         "parameters": [
           {
             "in": "path",
-            "name": "optionId",
-            "description": "Numeric ID of the option to get",
+            "name": "categorySlug",
+            "description": "the value of slug from a category",
             "required": true,
             "schema": {
-              "type": "integer"
+              "type": "string"
             }
           }
-        ]
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "number"
+                    },
+                    "code": {
+                      "type": "string"
+                    },
+                    "options": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/option"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     }
   }

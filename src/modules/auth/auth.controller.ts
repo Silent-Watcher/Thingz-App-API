@@ -1,5 +1,5 @@
 import type { NextFunction, Response } from 'express';
-import { type Mobile, zUser } from '../user/user.model';
+import { type Mobile, zUser } from '$modules/user/user.model';
 
 import Controller from '$app/interfaces/controller.interface';
 import type RequestWithBody from '$app/interfaces/requestWithBody.interface';
@@ -7,7 +7,7 @@ import httpStatus from 'http-status';
 import authMessages from './auth.messages';
 import AuthService from './auth.service';
 
-class AuthContoller extends Controller {
+class AuthController extends Controller {
   private service;
 
   constructor() {
@@ -88,4 +88,4 @@ class AuthContoller extends Controller {
   }
 }
 
-export default new AuthContoller();
+export default new AuthController();

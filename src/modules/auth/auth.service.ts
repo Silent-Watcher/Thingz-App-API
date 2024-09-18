@@ -1,10 +1,14 @@
 import { randomInt } from 'node:crypto';
 import Controller from '$app/interfaces/controller.interface';
-import userModel, { type Mobile, type OTP, type User } from '$app/modules/user/user.model';
+import userModel, {
+  type Mobile,
+  type OTP,
+  type User,
+} from '$modules/user/user.model';
 import httpErrors from 'http-errors';
 import authMessages from './auth.messages';
 
-import { signToken } from '$app/common/utils/token.utils';
+import { signToken } from '$utils/token.utils';
 
 class AuthService extends Controller {
   private userModel;

@@ -16,8 +16,12 @@ class CategoryController extends Controller {
   async getAll(_req: Request, res: Response, next: NextFunction) {
     try {
       const categories = await categoryModel
-        .find({ parent: { $exists: false } })
-        .populate([{ path: 'children' }])
+        .find(
+          { parent: { $exists: false } },
+          { parents: 0, updatedAt: 0, createdAt: 0 },
+        )
+        .lean()
+        .populate('children')
         .exec();
       res.status(httpStatus.OK).send({
         status: res.statusCode,
@@ -51,7 +55,7 @@ class CategoryController extends Controller {
       return res.status(httpStatus.CREATED).send({
         status: res.statusCode,
         code: 'created',
-        message: `category ${req.body.name} created successfully!`,
+        message: categoryMessages.created,
       });
     } catch (error) {
       next(error);

@@ -1,18 +1,27 @@
-import authMessages from '$app/modules/auth/auth.messages';
-import userModel from '$app/modules/user/user.model';
+import authMessages from '$modules/auth/auth.messages';
+import userModel from '$modules/user/user.model';
 import type { NextFunction, Request, Response } from 'express';
 import httpErrors from 'http-errors';
-import { type UserPayload, verifyToken } from '../utils/token.utils';
+import { type UserPayload, verifyToken } from '$utils/token.utils';
 
-export async function checkIfTheUserVerified(req: Request, _res: Response, next: NextFunction) {
+export async function checkIfTheUserVerified(
+  req: Request,
+  _res: Response,
+  next: NextFunction,
+) {
   try {
-    const accessToken = req.cookies.access_token;
+    const accessToken = req.cookies['access_token'];
 
-    if (!accessToken) throw new httpErrors.Unauthorized(authMessages.unauthorizedUser);
+    if (!accessToken)
+      throw new httpErrors.Unauthorized(authMessages.unauthorizedUser);
 
-    const payload = verifyToken(accessToken, process.env.JWT_SECRET as string) as UserPayload;
+    const payload = verifyToken(
+      accessToken,
+      process.env.JWT_SECRET as string,
+    ) as UserPayload;
 
-    if (!payload.id) throw new httpErrors.Unauthorized(authMessages.invalidCredentials);
+    if (!payload.id)
+      throw new httpErrors.Unauthorized(authMessages.invalidCredentials);
 
     const authorizedUser = await userModel
       .findOne(
@@ -24,7 +33,8 @@ export async function checkIfTheUserVerified(req: Request, _res: Response, next:
       )
       .lean();
 
-    if (!authorizedUser) throw new httpErrors.Unauthorized(authMessages.invalidCredentials);
+    if (!authorizedUser)
+      throw new httpErrors.Unauthorized(authMessages.invalidCredentials);
 
     req.user = authorizedUser;
     next();

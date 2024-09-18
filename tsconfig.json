@@ -29,7 +29,10 @@
     "noPropertyAccessFromIndexSignature": true,
 
     "paths": {
-      "$app/*": ["./src/*"]
+      "$app/*": ["./src/*"],
+      "$modules/*": ["./src/modules/*"],
+      "$middlewares/*": ["./src/common/middlewares/*"],
+      "$utils/*": ["./src/common/utils/*"]
     },
 
     "typeRoots": ["./src/common/@types/**", "./node_modules/@types/*"]

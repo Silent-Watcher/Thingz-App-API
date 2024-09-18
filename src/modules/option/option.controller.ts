@@ -1,10 +1,12 @@
 import type { NextFunction, Request, Response } from 'express';
 import Controller from '$app/interfaces/controller.interface';
 import optionService from './option.service';
-import categoryService from '$app/modules/category/category.service';
+import categoryService from '$modules/category/category.service';
 import { zOption, type Option } from './option.model';
 import httpStatus from 'http-status';
 import optionMessages from './option.messages';
+import { zCategory } from '../category/category.model';
+import { isFalse, isTrue } from '$app/common/utils/boolean.utils';
 
 class OptionController extends Controller {
   private service;
@@ -19,8 +21,14 @@ class OptionController extends Controller {
     try {
       const optionDto: Option = req.body;
 
+
       // check for minimum requirements
-      if (!optionDto?.category || !optionDto?.key || !optionDto?.type || !optionDto?.title)
+      if (
+        !optionDto?.category ||
+        !optionDto?.key ||
+        !optionDto?.type ||
+        !optionDto?.title
+      )
         return res.status(httpStatus.NOT_ACCEPTABLE).send({
           status: res.statusCode,
           error: {
@@ -29,11 +37,23 @@ class OptionController extends Controller {
           },
         });
 
+
+	   if(isTrue(optionDto.isRequired as string|boolean)) optionDto.isRequired = true
+	   if(isFalse(optionDto.isRequired as string|boolean)) optionDto.isRequired = false
       // new option data validation
       zOption.parse(optionDto);
 
       // check if the category exists with given id
-      await this.categoryService.checkIfTheCategoryExists(optionDto.category);
+      const isCategoryExists =
+        await this.categoryService.checkIfTheCategoryExists(optionDto.category);
+      if (!isCategoryExists)
+        return res.status(httpStatus.NOT_FOUND).send({
+          status: res.statusCode,
+          code: 'NOT FOUND',
+          error: {
+            message: `category with given id not found!`,
+          },
+        });
 
       await this.service.create(optionDto);
 
@@ -104,6 +124,64 @@ class OptionController extends Controller {
       next(error);
     }
   }
-}
 
+  async findByCategorySlug(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { categorySlug } = req.params;
+
+      // categorySlug data validation
+      zCategory.shape.slug.parse(categorySlug);
+
+      const options = await this.service.findByCategorySlug(categorySlug);
+
+      return res.status(httpStatus.OK).send({
+        status: res.statusCode,
+        code: 'OK',
+        options,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async getAll(_req: Request, res: Response, next: NextFunction) {
+    try {
+      const options = await this.service.getAll();
+      return res.status(httpStatus.OK).send({
+        status: res.statusCode,
+        code: 'OK',
+        options,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async deleteById(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { optionId } = req.params;
+
+      // categorySlug data validation
+      zOption.shape._id.parse(optionId);
+
+      const result = await this.service.deleteById(optionId);
+      if (!result.deletedCount)
+        return res.status(httpStatus.NOT_FOUND).send({
+          status: res.statusCode,
+          code: 'NOT FOUND',
+          error: {
+            message: optionMessages.notFound,
+          },
+        });
+
+      return res.status(httpStatus.OK).send({
+        status: res.statusCode,
+        code: 'OK',
+        message: optionMessages.deleted,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+}
 export default new OptionController();

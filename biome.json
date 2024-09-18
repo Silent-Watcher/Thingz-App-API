@@ -17,7 +17,7 @@
     "indentStyle": "space",
     "indentWidth": 2,
     "lineEnding": "lf",
-    "lineWidth": 100,
+    "lineWidth": 80,
     "attributePosition": "auto",
     "bracketSpacing": true,
     "ignore": ["**/node_modules", "**/dist", "./templates/"]

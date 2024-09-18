@@ -1,8 +1,9 @@
-import authRouter from '$app/modules/auth/auth.routes';
-import categoryRouter from '$app/modules/category/category.routes';
-import userRouter from '$app/modules/user/user.routes';
-import optionRouter from '$app/modules/option/option.routes';
+import authRouter from '$modules/auth/auth.routes';
+import categoryRouter from '$modules/category/category.routes';
+import userRouter from '$modules/user/user.routes';
+import optionRouter from '$modules/option/option.routes';
 import { type Request, type Response, Router } from 'express';
+import { checkIfTheUserVerified } from './guards/auth.gaurd';
 
 const router = Router();
 
@@ -11,13 +12,17 @@ router.get('/', (_req: Request, res: Response) => {
 });
 
 router.get('/health', async (_req: Request, res: Response) => {
-  res.send({ status: res.statusCode, code: 'OK', msg: 'server is up and running ... ' });
+  res.send({
+    status: res.statusCode,
+    code: 'OK',
+    msg: 'server is up and running ... ',
+  });
 });
 
 router.use('/auth', authRouter);
-router.use('/user', userRouter);
+router.use('/user', checkIfTheUserVerified, userRouter);
 
-router.use('/category', categoryRouter);
-router.use('/option', optionRouter);
+router.use('/category', checkIfTheUserVerified, categoryRouter);
+router.use('/option', checkIfTheUserVerified, optionRouter);
 
 export default router;

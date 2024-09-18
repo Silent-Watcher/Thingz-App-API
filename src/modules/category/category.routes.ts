@@ -1,4 +1,4 @@
-import removeEmpty from '$app/common/middlewares/removeEmpty.middleware';
+import removeEmpty from '$middlewares/removeEmpty.middleware';
 import { Router } from 'express';
 import categoryController from './category.controller';
 
