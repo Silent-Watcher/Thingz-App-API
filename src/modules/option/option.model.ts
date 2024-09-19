@@ -1,4 +1,4 @@
-import { type Document, model, Schema, Types } from 'mongoose';
+import { type Document, Schema, Types, model } from 'mongoose';
 import { z } from 'zod';
 
 export const zOption = z.object({
@@ -9,7 +9,7 @@ export const zOption = z.object({
   enum: z.union([z.array(z.any()), z.string()]).optional(),
   guide: z.string().trim().min(3).optional(),
   category: z.union([z.string(), z.instanceof(Types.ObjectId)]),
-  isRequired: z.boolean().default(false).optional()
+  isRequired: z.boolean().default(false).optional(),
 });
 
 export const optionSchema = new Schema(
@@ -23,7 +23,7 @@ export const optionSchema = new Schema(
     },
     enum: { type: Array, required: false },
     guide: { type: String, required: false, trim: true },
-	isRequired: {type : Boolean , required:false , default: false},
+    isRequired: { type: Boolean, required: false, default: false },
     category: { type: Types.ObjectId, ref: 'category', required: true },
   },
   { versionKey: false, toJSON: { virtuals: true }, id: false },

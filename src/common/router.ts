@@ -1,7 +1,7 @@
 import authRouter from '$modules/auth/auth.routes';
 import categoryRouter from '$modules/category/category.routes';
-import userRouter from '$modules/user/user.routes';
 import optionRouter from '$modules/option/option.routes';
+import userRouter from '$modules/user/user.routes';
 import { type Request, type Response, Router } from 'express';
 import { checkIfTheUserVerified } from './guards/auth.gaurd';
 

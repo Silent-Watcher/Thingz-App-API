@@ -1,8 +1,8 @@
 import authMessages from '$modules/auth/auth.messages';
 import userModel from '$modules/user/user.model';
+import { type UserPayload, verifyToken } from '$utils/token.utils';
 import type { NextFunction, Request, Response } from 'express';
 import httpErrors from 'http-errors';
-import { type UserPayload, verifyToken } from '$utils/token.utils';
 
 export async function checkIfTheUserVerified(
   req: Request,

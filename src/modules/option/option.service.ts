@@ -1,11 +1,10 @@
 import Service from '$app/interfaces/service.interface';
-import type { Types } from 'mongoose';
 import httpErrors from 'http-errors';
+import type { Types } from 'mongoose';
 
-import optionModel, { type Option } from './option.model';
 import slugify from 'slugify';
 import optionMessages from './option.messages';
-import logger from '$app/configs/logger.config';
+import optionModel, { type Option } from './option.model';
 
 class OptionService extends Service {
   private model;
@@ -105,7 +104,17 @@ class OptionService extends Service {
     categoryId: string | Types.ObjectId,
   ) {
     const foundedOption = await this.model.findOne({
-      key,
+      key ,
+      category: categoryId,
+    });
+    return foundedOption ? true : false;
+  }
+  async checkIfTheUpdatedKeyValueRelatedToCategoryIsDuplicated(
+    key: string,
+    categoryId: string | Types.ObjectId,
+  ) {
+    const foundedOption = await this.model.findOne({
+      key: {$ne: key} ,
       category: categoryId,
     });
     return foundedOption ? true : false;
@@ -113,6 +122,59 @@ class OptionService extends Service {
 
   async deleteById(id: string | Types.ObjectId) {
     return this.model.deleteOne({ _id: id });
+  }
+
+  async update(id: string | Types.ObjectId, optionDto: Option) {
+    // key title type enum guide isRequired
+    // check if the new key value would perform conflict and if not slugify
+	if(optionDto?.key){
+		optionDto.key = slugify(optionDto.key, {
+		  trim: true,
+		  replacement: '_',
+		  lower: true,
+		});
+		// check for duplicate key value
+		const isKeyDuplicate =
+		  await this.checkIfTheUpdatedKeyValueRelatedToCategoryIsDuplicated(
+			optionDto.key,
+			optionDto.category,
+		  );
+
+		if (isKeyDuplicate)
+		  throw new httpErrors.Conflict(
+			optionMessages.duplicateKeyValue(optionDto.key),
+		  );
+	}
+    // optimize the enum value
+    if (optionDto?.enum && typeof optionDto.enum == 'string') {
+      optionDto.enum = optionDto.enum.split(',');
+    } else if (
+      !Array.isArray(optionDto.enum) &&
+      typeof optionDto.enum != 'string'
+    ) {
+      optionDto.enum = [];
+    }
+
+    return this.model.updateOne(
+      { _id: id, category: optionDto.category },
+	  {$set:{...optionDto}}
+    );
+  }
+
+  async checkIfTheOptionExistsWithGivenId(id: string | Types.ObjectId) {
+    const foundedOption = await this.model.findById(id, { _id: 1 }).lean();
+    return foundedOption ? true : false;
+  }
+
+  async checkIfTheOptionExistsWithinACategory(
+    optionID: string | Types.ObjectId,
+    categoryId: string | Types.ObjectId,
+  ) {
+    const foundedOption = await this.model.find({
+      _id: optionID,
+      category: categoryId,
+    });
+    return foundedOption ? true : false;
   }
 }
 

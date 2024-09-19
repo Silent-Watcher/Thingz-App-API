@@ -1,16 +1,18 @@
-import type { NextFunction, Request, Response } from 'express';
-import Controller from '$app/interfaces/controller.interface';
-import optionService from './option.service';
-import categoryService from '$modules/category/category.service';
-import { zOption, type Option } from './option.model';
-import httpStatus from 'http-status';
-import optionMessages from './option.messages';
-import { zCategory } from '../category/category.model';
 import { isFalse, isTrue } from '$app/common/utils/boolean.utils';
+import Controller from '$app/interfaces/controller.interface';
+import categoryService from '$modules/category/category.service';
+import type { NextFunction, Request, Response } from 'express';
+import httpStatus from 'http-status';
+import categoryMessages from '../category/category.messages';
+import { zCategory } from '../category/category.model';
+import optionMessages from './option.messages';
+import { type Option, zOption } from './option.model';
+import optionService from './option.service';
 
 class OptionController extends Controller {
   private service;
   private categoryService: typeof categoryService;
+
   constructor() {
     super();
     this.service = optionService;
@@ -20,7 +22,6 @@ class OptionController extends Controller {
   async create(req: Request, res: Response, next: NextFunction) {
     try {
       const optionDto: Option = req.body;
-
 
       // check for minimum requirements
       if (
@@ -37,9 +38,11 @@ class OptionController extends Controller {
           },
         });
 
+      if (isTrue(optionDto.isRequired as string | boolean))
+        optionDto.isRequired = true;
+      if (isFalse(optionDto.isRequired as string | boolean))
+        optionDto.isRequired = false;
 
-	   if(isTrue(optionDto.isRequired as string|boolean)) optionDto.isRequired = true
-	   if(isFalse(optionDto.isRequired as string|boolean)) optionDto.isRequired = false
       // new option data validation
       zOption.parse(optionDto);
 
@@ -178,6 +181,80 @@ class OptionController extends Controller {
         status: res.statusCode,
         code: 'OK',
         message: optionMessages.deleted,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async update(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { optionId: id } = req.params;
+      const optionDto: Option = req.body;
+
+      // check for minimum requirements
+      if (! optionDto?.category || !id)
+        return res.status(httpStatus.NOT_ACCEPTABLE).send({
+          status: res.statusCode,
+          error: {
+            code: 'not acceptable',
+            message: optionMessages.dataNotProvided,
+          },
+        });
+
+      // optimize the isRequired option if it was sent
+      if (optionDto?.isRequired) {
+        if (isTrue(optionDto.isRequired as string | boolean))
+          optionDto.isRequired = true;
+        if (isFalse(optionDto.isRequired as string | boolean))
+          optionDto.isRequired = false;
+      }
+
+      // input data validation
+      zOption.shape._id.parse(id);
+      zOption.partial().parse(optionDto);
+
+      // check if the category exists with given id
+      const isCategoryExists =
+        await this.categoryService.checkIfTheCategoryExists(optionDto.category);
+      if (!isCategoryExists)
+        return res.status(httpStatus.NOT_FOUND).send({
+          status: res.statusCode,
+          code: 'NOT FOUND',
+          error: {
+            message: categoryMessages.notFoundWithId,
+          },
+        });
+
+      // check if the option exists within the category
+      const isOptionExists =
+        await this.service.checkIfTheOptionExistsWithinACategory(
+          id,
+          optionDto.category,
+        );
+      if (!isOptionExists)
+        return res.status(httpStatus.NOT_FOUND).send({
+          status: res.statusCode,
+          code: 'NOT FOUND',
+          error: {
+            message: optionMessages.notFoundWithinCategory,
+          },
+        });
+
+      const { matchedCount } = await this.service.update(id, optionDto);
+      if (!matchedCount)
+        return res.status(httpStatus.INTERNAL_SERVER_ERROR).send({
+          status: res.statusCode,
+          error: {
+            code: 'Internal Server Error',
+            message: 'failed to update the option please try again',
+          },
+        });
+
+      return res.status(httpStatus.OK).send({
+        status: res.statusCode,
+        code: 'OK',
+        message: optionMessages.updated(id),
       });
     } catch (error) {
       next(error);

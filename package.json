@@ -1,12 +1,12 @@
 {
   "private": true,
+  "version": "0.0.0",
   "engines": {
     "node": ">=20.16.0"
   },
   "engineStrict": true,
   "packageManager": "npm@10.8.1",
   "scripts": {
-    "preserve": "bunx biome check  --write .",
     "serve": "bun --env-file=.env.local --watch src/main.ts --minify",
     "build": "bun build src/main.ts --outdir ./dist --minify --splitting --external mongoose --target node ",
     "prestart": "bun run build",

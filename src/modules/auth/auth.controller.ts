@@ -1,5 +1,5 @@
-import type { NextFunction, Response } from 'express';
 import { type Mobile, zUser } from '$modules/user/user.model';
+import type { NextFunction, Response } from 'express';
 
 import Controller from '$app/interfaces/controller.interface';
 import type RequestWithBody from '$app/interfaces/requestWithBody.interface';

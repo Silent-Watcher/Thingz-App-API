@@ -127,9 +127,37 @@
           "guide": {
             "type": "string"
           },
-		  "isRequired":{
-			"type":"boolean"
-		  }
+          "isRequired": {
+            "type": "boolean"
+          }
+        }
+      },
+      "updateOption": {
+        "type": "object",
+        "required": ["category"],
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": ["string", "boolean", "number", "array"]
+          },
+          "category": {
+            "type": "string"
+          },
+          "enum": {
+            "type": "array"
+          },
+          "guide": {
+            "type": "string"
+          },
+          "isRequired": {
+            "type": "boolean"
+          }
         }
       }
     }
@@ -593,6 +621,49 @@
             }
           }
         ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/successResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "update an existing option info",
+        "tags": ["Option"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "optionId",
+            "description": "Numeric ID of the option to delete",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/updateOption",
+                "type": "object",
+                "required": false
+              }
+            },
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "$ref": "#/components/schemas/updateOption"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "content": {
