@@ -1,13 +1,13 @@
 import '$app/configs/env.config';
 
 import { errorHandler } from '$app/common/exceptions';
-import connectToMongoDb from '$app/configs/db.config';
-import { configSwagger } from '$app/configs/swagger.config';
+import connectToMongoDb from '$configs/db.config';
 import cookieParser from 'cookie-parser';
 import express from 'express';
-import logger, { startLogger } from './configs/logger.config';
+import logger, { startLogger } from '$configs/logger.config';
 
 import router from './common/router';
+import { configSwaggerV1 } from '$api/v1/swagger.config';
 
 const app = express();
 const PORT = Number(process.env.PORT || 8080);
@@ -18,8 +18,8 @@ app.use(express.json(), express.urlencoded({ extended: true }));
 
 // logger
 startLogger(app);
-// swagger
-configSwagger(app);
+// run swagger for api v1
+configSwaggerV1(app);
 // router
 app.use(router);
 // error handler
@@ -30,7 +30,9 @@ connectToMongoDb(DB_NAME as string)
     logger.info('connected to mongoDB successfully');
     app.listen(PORT, '0.0.0.0', () => {
       logger.info(`Server listening at ${process.env.SERVER_ADDR}`);
-    });
+    }).on('error', (err)=>{
+		logger.error(err.message)
+	});
   })
   .catch(() => {
     logger.error('failed to connect to mongodb');

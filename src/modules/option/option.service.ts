@@ -104,7 +104,7 @@ class OptionService extends Service {
     categoryId: string | Types.ObjectId,
   ) {
     const foundedOption = await this.model.findOne({
-      key ,
+      key,
       category: categoryId,
     });
     return foundedOption ? true : false;
@@ -114,7 +114,7 @@ class OptionService extends Service {
     categoryId: string | Types.ObjectId,
   ) {
     const foundedOption = await this.model.findOne({
-      key: {$ne: key} ,
+      key: { $ne: key },
       category: categoryId,
     });
     return foundedOption ? true : false;
@@ -127,24 +127,24 @@ class OptionService extends Service {
   async update(id: string | Types.ObjectId, optionDto: Option) {
     // key title type enum guide isRequired
     // check if the new key value would perform conflict and if not slugify
-	if(optionDto?.key){
-		optionDto.key = slugify(optionDto.key, {
-		  trim: true,
-		  replacement: '_',
-		  lower: true,
-		});
-		// check for duplicate key value
-		const isKeyDuplicate =
-		  await this.checkIfTheUpdatedKeyValueRelatedToCategoryIsDuplicated(
-			optionDto.key,
-			optionDto.category,
-		  );
+    if (optionDto?.key) {
+      optionDto.key = slugify(optionDto.key, {
+        trim: true,
+        replacement: '_',
+        lower: true,
+      });
+      // check for duplicate key value
+      const isKeyDuplicate =
+        await this.checkIfTheUpdatedKeyValueRelatedToCategoryIsDuplicated(
+          optionDto.key,
+          optionDto.category,
+        );
 
-		if (isKeyDuplicate)
-		  throw new httpErrors.Conflict(
-			optionMessages.duplicateKeyValue(optionDto.key),
-		  );
-	}
+      if (isKeyDuplicate)
+        throw new httpErrors.Conflict(
+          optionMessages.duplicateKeyValue(optionDto.key),
+        );
+    }
     // optimize the enum value
     if (optionDto?.enum && typeof optionDto.enum == 'string') {
       optionDto.enum = optionDto.enum.split(',');
@@ -157,7 +157,7 @@ class OptionService extends Service {
 
     return this.model.updateOne(
       { _id: id, category: optionDto.category },
-	  {$set:{...optionDto}}
+      { $set: { ...optionDto } },
     );
   }
 

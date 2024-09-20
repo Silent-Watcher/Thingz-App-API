@@ -58,8 +58,9 @@ function autoPopulate(this: any, next: CallbackWithoutResultAndOptionalError) {
   this.populate([{ path: 'children', select: 'name slug children' }]);
   next();
 }
-categorySchema.pre('find', autoPopulate).pre('findOne', autoPopulate);
 
+categorySchema.pre('find', autoPopulate).pre('findOne', autoPopulate);
+// categorySchema.pre('deleteOne', autoDelete )
 const categoryModel = model('category', categorySchema);
 
 export type Category = z.infer<typeof zCategory> & Document;

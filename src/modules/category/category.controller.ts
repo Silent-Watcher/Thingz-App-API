@@ -61,6 +61,34 @@ class CategoryController extends Controller {
       next(error);
     }
   }
+
+  async delete(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { categoryId } = req.params;
+
+      // category id validation
+      zCategory.shape._id.parse(categoryId);
+
+      const { deletedCount } = await this.service.delete(categoryId);
+
+      if (!deletedCount)
+        return res.status(httpStatus.INTERNAL_SERVER_ERROR).send({
+          status: res.statusCode,
+          code: 'INTERNAL SERVER ERROR',
+          error: {
+            message: categoryMessages.failedToDelete,
+          },
+        });
+
+      return res.status(httpStatus.OK).send({
+        status: res.statusCode,
+        code: 'OK',
+        message: categoryMessages.deleted,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 export default new CategoryController();

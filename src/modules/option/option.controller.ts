@@ -1,10 +1,10 @@
-import { isFalse, isTrue } from '$app/common/utils/boolean.utils';
+import { isFalse, isTrue } from '$utils/boolean.utils';
 import Controller from '$app/interfaces/controller.interface';
 import categoryService from '$modules/category/category.service';
 import type { NextFunction, Request, Response } from 'express';
 import httpStatus from 'http-status';
-import categoryMessages from '../category/category.messages';
-import { zCategory } from '../category/category.model';
+import categoryMessages from '$modules/category/category.messages';
+import { zCategory } from '$modules/category/category.model';
 import optionMessages from './option.messages';
 import { type Option, zOption } from './option.model';
 import optionService from './option.service';
@@ -193,7 +193,7 @@ class OptionController extends Controller {
       const optionDto: Option = req.body;
 
       // check for minimum requirements
-      if (! optionDto?.category || !id)
+      if (!optionDto?.category || !id)
         return res.status(httpStatus.NOT_ACCEPTABLE).send({
           status: res.statusCode,
           error: {

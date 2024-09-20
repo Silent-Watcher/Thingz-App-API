@@ -7,4 +7,6 @@ const router = Router();
 router.get('/', categoryController.getAll);
 router.post('/', removeEmpty, categoryController.create);
 
+router.delete('/:categoryId', categoryController.delete);
+
 export default router;

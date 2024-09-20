@@ -512,6 +512,34 @@
         }
       }
     },
+    "/category/{categoryId}": {
+      "delete": {
+        "summary": "delete an existing categories from given id value",
+        "tags": ["Category"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "categoryId",
+            "description": "Numeric ID of the category to delete",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/successResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/option": {
       "post": {
         "summary": "create set of options for a specific category",
