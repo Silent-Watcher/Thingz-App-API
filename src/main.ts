@@ -8,14 +8,17 @@ import logger, { startLogger } from '$configs/logger.config';
 
 import router from './common/router';
 import { configSwaggerV1 } from '$api/v1/swagger.config';
+import configs from './configs';
 
 const app = express();
 const PORT = Number(process.env.PORT || 8080);
 const { DB_NAME } = process.env;
 
-
 app.use(cookieParser(process.env.COOKIE_SECRET));
 app.use(express.json(), express.urlencoded({ extended: true }));
+
+// static files
+app.use('/static', express.static(configs.STATIC_FILES_PATH));
 
 // logger
 startLogger(app);
