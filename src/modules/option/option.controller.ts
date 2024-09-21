@@ -23,28 +23,10 @@ class OptionController extends Controller {
     try {
       const optionDto: Option = req.body;
 
-      // check for minimum requirements
-      if (
-        !optionDto?.category ||
-        !optionDto?.key ||
-        !optionDto?.type ||
-        !optionDto?.title
-      )
-        return res.status(httpStatus.NOT_ACCEPTABLE).send({
-          status: res.statusCode,
-          error: {
-            code: 'not acceptable',
-            message: optionMessages.dataNotProvided,
-          },
-        });
-
       if (isTrue(optionDto.isRequired as string | boolean))
         optionDto.isRequired = true;
       if (isFalse(optionDto.isRequired as string | boolean))
         optionDto.isRequired = false;
-
-      // new option data validation
-      zOption.parse(optionDto);
 
       // check if the category exists with given id
       const isCategoryExists =
@@ -74,9 +56,6 @@ class OptionController extends Controller {
     try {
       const { categoryId } = req.params;
 
-      //category id data validation
-      zOption.shape.category.parse(categoryId);
-
       const options = await this.service.findByCategoryId(categoryId as string);
 
       if (!options) {
@@ -103,9 +82,6 @@ class OptionController extends Controller {
     try {
       const { optionId } = req.params;
 
-      // option id data validation
-      zOption.shape._id.parse(optionId);
-
       const option = await this.service.find(optionId);
 
       if (!option) {
@@ -131,9 +107,6 @@ class OptionController extends Controller {
   async findByCategorySlug(req: Request, res: Response, next: NextFunction) {
     try {
       const { categorySlug } = req.params;
-
-      // categorySlug data validation
-      zCategory.shape.slug.parse(categorySlug);
 
       const options = await this.service.findByCategorySlug(categorySlug);
 
@@ -164,9 +137,6 @@ class OptionController extends Controller {
     try {
       const { optionId } = req.params;
 
-      // categorySlug data validation
-      zOption.shape._id.parse(optionId);
-
       const result = await this.service.deleteById(optionId);
       if (!result.deletedCount)
         return res.status(httpStatus.NOT_FOUND).send({
@@ -192,16 +162,6 @@ class OptionController extends Controller {
       const { optionId: id } = req.params;
       const optionDto: Option = req.body;
 
-      // check for minimum requirements
-      if (!optionDto?.category || !id)
-        return res.status(httpStatus.NOT_ACCEPTABLE).send({
-          status: res.statusCode,
-          error: {
-            code: 'not acceptable',
-            message: optionMessages.dataNotProvided,
-          },
-        });
-
       // optimize the isRequired option if it was sent
       if (optionDto?.isRequired) {
         if (isTrue(optionDto.isRequired as string | boolean))
@@ -209,10 +169,6 @@ class OptionController extends Controller {
         if (isFalse(optionDto.isRequired as string | boolean))
           optionDto.isRequired = false;
       }
-
-      // input data validation
-      zOption.shape._id.parse(id);
-      zOption.partial().parse(optionDto);
 
       // check if the category exists with given id
       const isCategoryExists =
@@ -232,6 +188,7 @@ class OptionController extends Controller {
           id,
           optionDto.category,
         );
+
       if (!isOptionExists)
         return res.status(httpStatus.NOT_FOUND).send({
           status: res.statusCode,

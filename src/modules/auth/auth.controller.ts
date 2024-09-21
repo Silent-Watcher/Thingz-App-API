@@ -1,8 +1,7 @@
-import { type Mobile, zUser } from '$modules/user/user.model';
-import type { NextFunction, Response } from 'express';
+import type { Mobile } from '$modules/user/user.model';
+import type { NextFunction, Response, Request } from 'express';
 
 import Controller from '$app/interfaces/controller.interface';
-import type RequestWithBody from '$app/interfaces/requestWithBody.interface';
 import httpStatus from 'http-status';
 import authMessages from './auth.messages';
 import AuthService from './auth.service';
@@ -15,19 +14,9 @@ class AuthController extends Controller {
     this.service = AuthService;
   }
 
-  async sendOtp(req: RequestWithBody, res: Response, next: NextFunction) {
+  async sendOtp(req: Request, res: Response, next: NextFunction) {
     try {
       const { mobile } = req.body;
-      if (!mobile)
-        return res.status(httpStatus.NOT_ACCEPTABLE).send({
-          status: res.statusCode,
-          error: {
-            code: 'not acceptable',
-            message: authMessages.dataNotProvided,
-          },
-        });
-
-      zUser.shape.mobile.parse(mobile);
 
       await this.service.sendOtp(mobile as Mobile);
       return res.send({
@@ -40,20 +29,9 @@ class AuthController extends Controller {
     }
   }
 
-  async checkOtp(req: RequestWithBody, res: Response, next: NextFunction) {
+  async checkOtp(req: Request, res: Response, next: NextFunction) {
     try {
       const { mobile, code } = req.body;
-      if (!mobile || !code)
-        return res.status(httpStatus.NOT_ACCEPTABLE).send({
-          status: res.statusCode,
-          error: {
-            code: 'not acceptable',
-            message: authMessages.dataNotProvided,
-          },
-        });
-
-      zUser.shape.mobile.parse(mobile as Mobile);
-      zUser.shape.otp.partial({ expiresIn: true }).parse({ code });
 
       const token = await this.service.checkOtp(mobile, code as number);
       res.cookie('access_token', token, {
@@ -73,7 +51,7 @@ class AuthController extends Controller {
     }
   }
 
-  logout(req: RequestWithBody, res: Response, next: NextFunction) {
+  logout(req: Request, res: Response, next: NextFunction) {
     try {
       res.clearCookie('access_token');
       delete req.user;

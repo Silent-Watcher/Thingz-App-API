@@ -28,11 +28,13 @@ errorHandler(app);
 connectToMongoDb(DB_NAME as string)
   .then(() => {
     logger.info('connected to mongoDB successfully');
-    app.listen(PORT, '0.0.0.0', () => {
-      logger.info(`Server listening at ${process.env.SERVER_ADDR}`);
-    }).on('error', (err)=>{
-		logger.error(err.message)
-	});
+    app
+      .listen(PORT, '0.0.0.0', () => {
+        logger.info(`Server listening at ${process.env.SERVER_ADDR}`);
+      })
+      .on('error', (err) => {
+        logger.error(err.message);
+      });
   })
   .catch(() => {
     logger.error('failed to connect to mongodb');

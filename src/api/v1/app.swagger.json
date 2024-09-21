@@ -156,7 +156,8 @@
             "type": "string"
           },
           "isRequired": {
-            "type": "boolean"
+            "type": "boolean",
+            "example": false
           }
         }
       }

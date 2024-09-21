@@ -21,7 +21,7 @@ const environmentSchema = z.object({
   JWT_SECRET: z.string(),
   COOKIE_SECRET: z.string(),
 
-  SMS_API_TOKEN: z.string()
+  SMS_API_TOKEN: z.string(),
 });
 
 const envParsedResult = environmentSchema.safeParse(process.env);

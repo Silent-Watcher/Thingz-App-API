@@ -8,14 +8,35 @@ import {
 import { z } from 'zod';
 
 export const zCategory = z.object({
-  _id: z.union([z.instanceof(Types.ObjectId), z.string()]),
-  name: z.string().trim(),
+  _id: z
+    .union([
+      z.instanceof(Types.ObjectId),
+      z.string().regex(/^[a-f0-9]{24}$/, 'invalid id format'),
+    ])
+    .optional(),
+  name: z.string().trim().min(1, 'name required'),
   icon: z.string().optional(),
   slug: z.string().trim().optional(),
-  parent: z.union([z.instanceof(Types.ObjectId).optional(), z.string()]),
-  parents: z.array(
-    z.union([z.instanceof(Types.ObjectId).optional(), z.string()]),
-  ),
+  parent: z
+    .union([
+      z.instanceof(Types.ObjectId).optional(),
+      z
+        .string()
+        .regex(/^[a-f0-9]{24}$/, 'invalid id format')
+        .optional(),
+    ])
+    .optional(),
+  parents: z
+    .array(
+      z.union([
+        z.instanceof(Types.ObjectId).optional(),
+        z
+          .string()
+          .regex(/^[a-f0-9]{24}$/, 'invalid id format')
+          .optional(),
+      ]),
+    )
+    .optional(),
   updatedAt: z.number().optional(),
   createdAt: z.number().optional(),
 });

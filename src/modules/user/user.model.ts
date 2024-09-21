@@ -12,8 +12,14 @@ export const zUser = z.object({
       'invalid mobile format ',
     ),
   otp: z.object({
-    code: z.union([z.number().gte(10000).lte(99999), z.string()]),
-    expiresIn: z.number().default(0),
+    code: z.union([
+      z
+        .number()
+        .gte(10000, 'invalid otp format')
+        .lte(99999, 'invalid otp format'),
+      z.string().regex(/\b[1-9][0-9]{4}\b/g, 'invalid otp format'),
+    ]),
+    expiresIn: z.number().default(0).optional(),
   }),
   isMobileVerified: z.boolean().default(false),
   updatedAt: z.number().optional(),

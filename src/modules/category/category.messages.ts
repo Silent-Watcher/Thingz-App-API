@@ -3,7 +3,7 @@ const categoryMessages = Object.freeze({
   created: (name: string) => `category ${name} created successfully!`,
   notFoundWithId: 'category with given id not found!',
   deleted: 'category deleted successfully.',
-  failedToDelete: 'failed to delete the category try again'
+  failedToDelete: 'failed to delete the category try again',
 });
 
 export default categoryMessages;

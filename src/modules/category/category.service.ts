@@ -8,7 +8,7 @@ import optionModel from '$modules/option/option.model';
 
 class CategoryService extends Service {
   private model;
-  private optionModel
+  private optionModel;
   constructor() {
     super();
     this.model = categoryModel;
@@ -22,9 +22,9 @@ class CategoryService extends Service {
       );
       const parents = [
         ...new Set(
-          [foundedParentCategory._id.toString()]
+          [(foundedParentCategory._id as Types.ObjectId).toString()]
             .concat(
-              foundedParentCategory.parents.map((id) =>
+              (foundedParentCategory.parents as Types.ObjectId[]).map((id) =>
                 (id as Types.ObjectId).toString(),
               ),
             )
@@ -72,29 +72,30 @@ class CategoryService extends Service {
   }
 
   async delete(id: string | Types.ObjectId) {
-
     // check if the category exists
     const foundedCategory = await this.checkIfTheCategoryExists(id);
     if (!foundedCategory)
       throw new httpErrors.NotFound(categoryMessages.notFoundWithId);
 
-	// remove all related children options
-	const childrenCategories = await this.model.find({parents:{$in:[id]}} ,{_id:1}).lean();
+    // remove all related children options
+    const childrenCategories = await this.model
+      .find({ parents: { $in: [id] } }, { _id: 1 })
+      .lean();
 
-	// biome-ignore lint/style/useConst: <explanation>
-	let childrenCategoriesID : ( string| Types.ObjectId)[] = [id];
+    // biome-ignore lint/style/useConst: <explanation>
+    let childrenCategoriesID: (string | Types.ObjectId)[] = [id];
 
-	childrenCategories.forEach(document=> {
-		return childrenCategoriesID.push(document._id);
-	})
-
+    childrenCategories.forEach((document) => {
+      return childrenCategoriesID.push(document._id);
+    });
 
     // remove all related options include the target category option
-	await this.optionModel.deleteMany({category:{$in:childrenCategoriesID }})
+    await this.optionModel.deleteMany({
+      category: { $in: childrenCategoriesID },
+    });
 
-	// remove all related children
-	await this.model.deleteMany({parents:{$in:[id]}});
-
+    // remove all related children
+    await this.model.deleteMany({ parents: { $in: [id] } });
 
     return this.model.deleteOne({ _id: id }).exec();
   }

@@ -35,7 +35,7 @@ class AuthService extends Controller {
       });
       return;
     }
-    if (user.otp.expiresIn > now) {
+    if ((user.otp.expiresIn as number) > now) {
       throw new httpErrors.BadRequest(authMessages.otpNotExpired);
     }
 
@@ -54,7 +54,7 @@ class AuthService extends Controller {
 
     if (!foundedUser) throw new httpErrors.NotFound(authMessages.userNotFound);
 
-    if (foundedUser?.otp && foundedUser.otp.expiresIn < now)
+    if (foundedUser?.otp && (foundedUser.otp.expiresIn as number) < now)
       throw new httpErrors.NotAcceptable(authMessages.otpExpired);
 
     if (code != foundedUser.otp.code)

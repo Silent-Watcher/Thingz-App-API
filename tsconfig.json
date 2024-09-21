@@ -11,14 +11,14 @@
     "moduleResolution": "Bundler",
     "esModuleInterop": true,
 
-	"isolatedModules": true,
+    "isolatedModules": true,
     "moduleDetection": "force",
-	"verbatimModuleSyntax": true,
+    "verbatimModuleSyntax": true,
 
     "resolveJsonModule": true,
-	"allowJs": true,
+    "allowJs": true,
 
-	"baseUrl": ".",
+    "baseUrl": ".",
 
     "strict": true,
     "noImplicitAny": true,
@@ -38,8 +38,8 @@
       "$modules/*": ["./src/modules/*"],
       "$middlewares/*": ["./src/common/middlewares/*"],
       "$utils/*": ["./src/common/utils/*"],
-	  "$configs/*":["./src/configs/*"],
-	  "$api/*" : ["./src/api/*"]
+      "$configs/*": ["./src/configs/*"],
+      "$api/*": ["./src/api/*"]
     },
 
     "typeRoots": ["./src/common/@types/**", "./node_modules/@types/*"]

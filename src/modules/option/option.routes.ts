@@ -1,17 +1,42 @@
 import removeEmpty from '$middlewares/removeEmpty.middleware';
 import { Router } from 'express';
 import optionController from './option.controller';
+import {
+  validateBody,
+  validateParams,
+} from '$middlewares/validator.middleware';
+import { zOption } from './option.model';
+import { zCategory } from '$modules/category/category.model';
 
 const router = Router();
 
-router.post('/', removeEmpty, optionController.create);
-router.get('/', optionController.getAll);
+router
+  .route('/')
+  .get(optionController.getAll)
+  .post(removeEmpty, validateBody(zOption), optionController.create);
 
-router.get('/for/:categoryId', optionController.findByCategoryId);
-router.get('/for/slug/:categorySlug', optionController.findByCategorySlug);
+router.get(
+  '/for/:categoryId',
+  validateParams(zOption.pick({ category: true })),
+  optionController.findByCategoryId,
+);
+router.get(
+  '/for/slug/:categorySlug',
+  validateParams(zCategory.pick({ slug: true })),
+  optionController.findByCategorySlug,
+);
 
-router.get('/:optionId', optionController.findById);
-router.delete('/:optionId', optionController.deleteById);
-router.put('/:optionId', removeEmpty, optionController.update);
+router
+  .route('/:optionId')
+  .get(validateParams(zOption.pick({ _id: true })), optionController.findById)
+  .delete(
+    validateParams(zOption.pick({ _id: true })),
+    optionController.deleteById,
+  )
+  .put(
+    validateParams(zOption.pick({ _id: true })),
+    validateBody(zOption.partial()),
+    optionController.update,
+  );
 
 export default router;

@@ -9,7 +9,12 @@ export const zOption = z.object({
   enum: z.union([z.array(z.any()), z.string()]).optional(),
   guide: z.string().trim().min(3).optional(),
   category: z.union([z.string(), z.instanceof(Types.ObjectId)]),
-  isRequired: z.boolean().default(false).optional(),
+  isRequired: z
+    .union([
+      z.boolean().default(false).optional(),
+      z.enum(['true', 'false']).default('false'),
+    ])
+    .optional(),
 });
 
 export const optionSchema = new Schema(

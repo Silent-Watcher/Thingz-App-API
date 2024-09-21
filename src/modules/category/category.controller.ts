@@ -3,7 +3,7 @@ import type { NextFunction, Request, Response } from 'express';
 import Controller from '$app/interfaces/controller.interface';
 import httpStatus from 'http-status';
 import categoryMessages from './category.messages';
-import categoryModel, { zCategory } from './category.model';
+import categoryModel from './category.model';
 import categoryService from './category.service';
 
 class CategoryController extends Controller {
@@ -35,21 +35,6 @@ class CategoryController extends Controller {
 
   async create(req: Request, res: Response, next: NextFunction) {
     try {
-      const categoryDto = req.body;
-
-      // check for minimum requirements
-      if (!categoryDto?.name)
-        return res.status(httpStatus.NOT_ACCEPTABLE).send({
-          status: res.statusCode,
-          error: {
-            code: 'not acceptable',
-            message: categoryMessages.dataNotProvided,
-          },
-        });
-
-      // new category data validation
-      zCategory.partial().parse(req.body);
-
       await this.service.create(req.body);
 
       return res.status(httpStatus.CREATED).send({
@@ -65,9 +50,6 @@ class CategoryController extends Controller {
   async delete(req: Request, res: Response, next: NextFunction) {
     try {
       const { categoryId } = req.params;
-
-      // category id validation
-      zCategory.shape._id.parse(categoryId);
 
       const { deletedCount } = await this.service.delete(categoryId);
 
