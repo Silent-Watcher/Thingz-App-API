@@ -4,9 +4,8 @@ import categoryService from '$modules/category/category.service';
 import type { NextFunction, Request, Response } from 'express';
 import httpStatus from 'http-status';
 import categoryMessages from '$modules/category/category.messages';
-import { zCategory } from '$modules/category/category.model';
 import optionMessages from './option.messages';
-import { type Option, zOption } from './option.model';
+import type { Option } from './option.model';
 import optionService from './option.service';
 
 class OptionController extends Controller {

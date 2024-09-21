@@ -13,6 +13,7 @@ const app = express();
 const PORT = Number(process.env.PORT || 8080);
 const { DB_NAME } = process.env;
 
+
 app.use(cookieParser(process.env.COOKIE_SECRET));
 app.use(express.json(), express.urlencoded({ extended: true }));
 

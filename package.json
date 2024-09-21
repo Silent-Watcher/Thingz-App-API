@@ -22,6 +22,7 @@
     "@types/swagger-ui-express": "^4.1.6",
     "auto-bind": "^5.0.1",
     "cookie-parser": "^1.4.6",
+    "eta": "^3.5.0",
     "express": "^4.21.0",
     "http-errors": "^2.0.0",
     "http-status": "^1.7.4",
